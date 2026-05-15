@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { format } from "date-fns";
 
@@ -99,10 +99,14 @@ export default async function InvoicesPage({
                     <TableCell className="text-slate-500">{invoice.description}</TableCell>
                     <TableCell>{formatMoney(invoice.amountCents)}</TableCell>
                     <TableCell>
-                      <Badge variant={invoice.status === 'paid' ? 'secondary' : invoice.status === 'overdue' ? 'destructive' : 'default'}
-                             className={invoice.status === 'pending' ? 'bg-amber-100 text-amber-800 hover:bg-amber-100' : ''}>
+                      <span className={cn(
+                        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border",
+                        invoice.status === 'paid' ? "bg-emerald-50 text-emerald-700 border-emerald-200" : 
+                        invoice.status === 'overdue' ? "bg-rose-50 text-rose-700 border-rose-200" : 
+                        "bg-amber-50 text-amber-700 border-amber-200"
+                      )}>
                         {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
-                      </Badge>
+                      </span>
                     </TableCell>
                     <TableCell className="text-slate-500">
                       {format(new Date(invoice.dueDate), "MMM d, yyyy")}

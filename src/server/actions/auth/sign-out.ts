@@ -5,5 +5,5 @@ import { redirect } from "next/navigation";
 
 export async function signOutAction() {
   await deleteSession();
-  redirect("/sign-in");
+  redirect("/login");
 }

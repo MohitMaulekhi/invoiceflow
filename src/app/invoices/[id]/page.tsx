@@ -2,7 +2,7 @@ import { getInvoiceById } from "@/server/queries/invoices";
 import { requireAuth } from "@/lib/auth/session";
 import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowLeft, Send, CheckCircle, Clock } from "lucide-react";
@@ -76,12 +76,14 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
                   Created on {format(new Date(invoice.createdAt), "MMM d, yyyy")}
                 </CardDescription>
               </div>
-              <Badge 
-                variant={invoice.status === 'paid' ? 'secondary' : invoice.status === 'overdue' ? 'destructive' : 'default'}
-                className={invoice.status === 'pending' ? 'bg-amber-100 text-amber-800 hover:bg-amber-100 text-sm' : 'text-sm'}
-              >
+              <span className={cn(
+                "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border",
+                invoice.status === 'paid' ? "bg-emerald-50 text-emerald-700 border-emerald-200" : 
+                invoice.status === 'overdue' ? "bg-rose-50 text-rose-700 border-rose-200" : 
+                "bg-amber-50 text-amber-700 border-amber-200"
+              )}>
                 {invoice.status.toUpperCase()}
-              </Badge>
+              </span>
             </CardHeader>
             <CardContent>
               <div className="flex justify-between items-end mt-4 pt-6 border-t">

@@ -35,8 +35,6 @@ export async function signUpAction(prevState: any, formData: FormData) {
 
     const newUser = result[0];
 
-    // TODO: Generate verification token and send email via Resend
-
     await createSession({
       userId: newUser.id,
       email: newUser.email,

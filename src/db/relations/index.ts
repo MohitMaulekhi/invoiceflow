@@ -3,6 +3,7 @@ import { users } from "../schema/users";
 import { customers } from "../schema/customers";
 import { invoices } from "../schema/invoices";
 import { reminders } from "../schema/reminders";
+import { invoiceLineItems } from "../schema/invoice_line_items";
 
 export const usersRelations = relations(users, ({ many }) => ({
   customers: many(customers),
@@ -27,6 +28,14 @@ export const invoicesRelations = relations(invoices, ({ one, many }) => ({
     references: [customers.id],
   }),
   reminders: many(reminders),
+  lineItems: many(invoiceLineItems),
+}));
+
+export const invoiceLineItemsRelations = relations(invoiceLineItems, ({ one }) => ({
+  invoice: one(invoices, {
+    fields: [invoiceLineItems.invoiceId],
+    references: [invoices.id],
+  }),
 }));
 
 export const remindersRelations = relations(reminders, ({ one }) => ({

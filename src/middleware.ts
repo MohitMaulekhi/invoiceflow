@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get("session")?.value;
   const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
-  const isAuthRoute = pathname === "/sign-in" || pathname === "/sign-up";
+  const isAuthRoute = pathname === "/login";
 
   // Check token validity
   let isValid = false;
@@ -24,7 +24,7 @@ export async function middleware(request: NextRequest) {
 
   // Logic 1: Redirect unauthenticated users away from protected routes
   if (isProtectedRoute && !isValid) {
-    const response = NextResponse.redirect(new URL("/sign-in", request.url));
+    const response = NextResponse.redirect(new URL("/login", request.url));
     if (token) response.cookies.delete("session");
     return response;
   }
