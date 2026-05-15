@@ -11,12 +11,7 @@ export default async function SettingsPage() {
   }
 
   return (
-    <div className="max-w-5xl space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900">Settings</h1>
-        <p className="text-slate-500 mt-2">Manage your account settings and business profile.</p>
-      </div>
-
+    <div className="max-w-4xl mx-auto py-8">
       <SettingsForm user={user} />
     </div>
   );

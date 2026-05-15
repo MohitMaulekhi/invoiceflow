@@ -1,73 +1,113 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useTransition } from "react";
 import { updateProfileAction } from "@/server/actions/users/update-profile";
+import { signOutAction } from "@/server/actions/auth/sign-out";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, LogOut } from "lucide-react";
 
 export function SettingsForm({ user }: { user: any }) {
   const [state, formAction, isPending] = useActionState(updateProfileAction, null);
+  const [isSignOutPending, startSignOut] = useTransition();
+
+  const handleLogout = () => {
+    startSignOut(async () => {
+      await signOutAction();
+    });
+  };
+
+  const userInitials = user.name ? user.name.charAt(0).toUpperCase() : "U";
 
   return (
-    <Card className="shadow-sm border border-slate-100 rounded-2xl bg-white overflow-hidden">
-      <CardHeader className="p-6 border-b border-slate-100">
-        <CardTitle className="text-lg text-slate-900 font-semibold">Business Profile</CardTitle>
-        <CardDescription className="text-sm text-slate-500 mt-1">
-          Update your personal and business details. These details will appear on your invoices.
-        </CardDescription>
-      </CardHeader>
-      <form action={formAction}>
-        <CardContent className="p-8 space-y-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Left Column: Personal Info */}
-            <div className="space-y-6">
-              <h3 className="text-sm uppercase tracking-widest font-semibold text-slate-500 mb-4">Personal information</h3>
+    <div className="flex flex-col lg:flex-row gap-8 items-start">
+      {/* Business Details Card (Left Side on Desktop) */}
+      <form action={formAction} className="flex-1 w-full order-2 lg:order-1">
+        <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 rounded-[24px] bg-white overflow-hidden">
+          <CardHeader className="p-8 border-b border-slate-100">
+            <CardTitle className="text-xl text-slate-900 font-semibold tracking-tight">Business Details</CardTitle>
+            <CardDescription className="text-sm text-slate-500 mt-1">
+              These details will appear on all generated invoices and client communications.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="divide-y divide-slate-100">
               
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Email address</label>
-                <Input type="email" value={user.email} readOnly aria-readonly className="border-slate-200 text-slate-500" />
+              <div className="grid grid-cols-1 md:grid-cols-3 p-8 gap-4 items-center hover:bg-slate-50/50 transition-colors">
+                <div className="text-sm font-semibold text-slate-700">Full Name *</div>
+                <div className="md:col-span-2">
+                  <Input id="name" name="name" defaultValue={user.name} required className="focus:border-primary border-slate-200 w-full bg-white shadow-sm" />
+                </div>
               </div>
-              
-              <div className="space-y-2">
-                <label htmlFor="name" className="text-sm font-semibold text-slate-700">Full name *</label>
-                <Input id="name" name="name" defaultValue={user.name} required className="focus:border-primary border-slate-200" />
+
+              <div className="grid grid-cols-1 md:grid-cols-3 p-8 gap-4 items-center hover:bg-slate-50/50 transition-colors bg-slate-50/30">
+                <div className="text-sm font-semibold text-slate-700">Business Name *</div>
+                <div className="md:col-span-2">
+                  <Input id="businessName" name="businessName" defaultValue={user.businessName} required className="focus:border-primary border-slate-200 w-full bg-white shadow-sm" />
+                </div>
               </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 p-8 gap-4 items-center hover:bg-slate-50/50 transition-colors">
+                <div className="text-sm font-semibold text-slate-700">Business Phone</div>
+                <div className="md:col-span-2">
+                  <Input id="businessPhone" name="businessPhone" defaultValue={user.businessPhone || ""} placeholder="+1 (555) 000-0000" className="focus:border-primary border-slate-200 w-full bg-white shadow-sm" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 p-8 gap-4 items-center hover:bg-slate-50/50 transition-colors bg-slate-50/30">
+                <div className="text-sm font-semibold text-slate-700">Business Address</div>
+                <div className="md:col-span-2">
+                  <Input id="businessAddress" name="businessAddress" defaultValue={user.businessAddress || ""} placeholder="123 Business Rd, Tech City, CA 94016" className="focus:border-primary border-slate-200 w-full bg-white shadow-sm" />
+                </div>
+              </div>
+
             </div>
 
-            {/* Right Column: Business Info */}
-            <div className="space-y-6">
-              <h3 className="text-sm uppercase tracking-widest font-semibold text-slate-500 mb-4">Business details</h3>
-              
-              <div className="space-y-2">
-                <label htmlFor="businessName" className="text-sm font-semibold text-slate-700">Business name *</label>
-                <Input id="businessName" name="businessName" defaultValue={user.businessName} required className="focus:border-primary border-slate-200" />
-              </div>
+            <div className="p-6 border-t border-slate-100 bg-slate-50 flex flex-col sm:flex-row items-center justify-end gap-4">
+              {state?.error && <p role="alert" className="text-sm text-red-600 font-medium bg-red-50 p-2.5 px-4 rounded-xl border border-red-100">{state.error}</p>}
+              {state?.success && <p role="alert" className="text-sm text-emerald-600 font-medium bg-emerald-50 p-2.5 px-4 rounded-xl border border-emerald-100">{state.success}</p>}
 
-              <div className="space-y-2">
-                <label htmlFor="businessPhone" className="text-sm font-semibold text-slate-700">Business phone</label>
-                <Input id="businessPhone" name="businessPhone" defaultValue={user.businessPhone || ""} placeholder="+1 (555) 000-0000" className="focus:border-primary border-slate-200" />
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="businessAddress" className="text-sm font-semibold text-slate-700">Business address</label>
-                <Input id="businessAddress" name="businessAddress" defaultValue={user.businessAddress || ""} placeholder="123 Business Rd, Tech City, CA 94016" className="focus:border-primary border-slate-200" />
-              </div>
+              <Button type="submit" disabled={isPending} className="w-full sm:w-auto px-10 py-6 rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
+                {isPending ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
+                {isPending ? "Saving..." : "Save Changes"}
+              </Button>
             </div>
-          </div>
+          </CardContent>
+        </Card>
+      </form>
 
-          <div className="pt-6 border-t border-slate-100 flex items-center justify-end gap-4">
-            {state?.error && <p role="alert" className="text-sm text-red-600 font-medium bg-red-50 p-3 rounded-lg border border-red-100">{state.error}</p>}
-            {state?.success && <p role="alert" className="text-sm text-primary font-medium bg-primary/10 p-3 rounded-lg border border-primary/10">{state.success}</p>}
-
-            <Button type="submit" disabled={isPending} size="lg" className="ml-2">
-              {isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-              {isPending ? "Saving..." : "Save Changes"}
-            </Button>
+      {/* Profile & Security Card (Right Side on Desktop) */}
+      <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 rounded-[24px] bg-white overflow-hidden w-full lg:w-[400px] shrink-0 order-1 lg:order-2">
+        <CardHeader className="p-8 border-b border-slate-100">
+          <CardTitle className="text-xl text-slate-900 font-semibold tracking-tight">Profile</CardTitle>
+          <CardDescription className="text-sm text-slate-500 mt-1">
+            Your personal information and security.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-8 space-y-8">
+          <div className="flex flex-col items-center text-center gap-6">
+            <div className="w-24 h-24 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-4xl shadow-md shrink-0">
+              {userInitials}
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-xl font-bold text-slate-900">{user.name}</h3>
+              <p className="text-slate-500 font-medium">{user.email}</p>
+            </div>
+            <div className="w-full pt-4 border-t border-slate-100">
+              <Button 
+                onClick={handleLogout} 
+                disabled={isSignOutPending} 
+                variant="outline" 
+                className="w-full rounded-xl font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-50 border-rose-200 transition-colors py-6 px-6"
+              >
+                {isSignOutPending ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <LogOut className="w-5 h-5 mr-2" />}
+                Log Out
+              </Button>
+            </div>
           </div>
         </CardContent>
-      </form>
-    </Card>
+      </Card>
+    </div>
   );
 }
