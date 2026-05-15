@@ -22,17 +22,19 @@ export default async function DashboardPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
+    <div className="max-w-[1600px] mx-auto space-y-8">
       <div>
         <h1 className="text-3xl font-semibold tracking-tight">Overview</h1>
         <p className="text-slate-500 mt-2">Manage your business metrics and outstanding invoices.</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="shadow-sm border-slate-200">
+        <Card className="shadow-sm border-slate-200 rounded-2xl">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-500">Total Outstanding</CardTitle>
-            <DollarSign className="h-4 w-4 text-slate-400" />
+            <div className="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center">
+              <DollarSign className="h-4 w-4 text-amber-500" />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatMoney(stats.unpaidAmount + stats.overdueAmount)}</div>
@@ -40,21 +42,25 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
         
-        <Card className="shadow-sm border-slate-200">
+        <Card className="shadow-sm border-slate-200 rounded-2xl">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-500">Amount Overdue</CardTitle>
-            <Clock className="h-4 w-4 text-red-500" />
+            <div className="w-8 h-8 rounded-full bg-rose-50 flex items-center justify-center">
+              <Clock className="h-4 w-4 text-rose-500" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">{formatMoney(stats.overdueAmount)}</div>
+            <div className="text-2xl font-bold text-rose-600">{formatMoney(stats.overdueAmount)}</div>
             <p className="text-xs text-slate-500 mt-1">{stats.overdueCount} overdue invoices</p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-sm border-slate-200">
+        <Card className="shadow-sm border-slate-200 rounded-2xl">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-500">Total Collected</CardTitle>
-            <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+            <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center">
+              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatMoney(stats.paidAmount)}</div>
@@ -62,10 +68,12 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="shadow-sm border-slate-200">
+        <Card className="shadow-sm border-slate-200 rounded-2xl">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-500">Total Invoices</CardTitle>
-            <ArrowUpRight className="h-4 w-4 text-slate-400" />
+            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+              <ArrowUpRight className="h-4 w-4 text-primary" />
+            </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalCount}</div>
