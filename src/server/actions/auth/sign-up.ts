@@ -16,7 +16,7 @@ export async function signUpAction(prevState: any, formData: FormData) {
     return { error: parsed.error.issues[0].message };
   }
 
-  const { email, password, name } = parsed.data;
+  const { email, password, name, businessName } = parsed.data;
 
   try {
     const existingUser = await db.select().from(users).where(eq(users.email, email)).limit(1);
@@ -30,6 +30,7 @@ export async function signUpAction(prevState: any, formData: FormData) {
     const result = await db.insert(users).values({
       email,
       name,
+      businessName,
       passwordHash,
     }).returning({ id: users.id, email: users.email });
 

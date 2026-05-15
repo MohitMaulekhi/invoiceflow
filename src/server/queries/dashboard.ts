@@ -13,7 +13,7 @@ export async function getDashboardStats(userId: string) {
       } else if (inv.status === "overdue") {
         acc.overdueCount++;
         acc.overdueAmount += inv.amountCents;
-      } else if (inv.status === "pending") {
+      } else if (inv.status === "draft" || inv.status === "sent" || inv.status === "viewed") {
         acc.pendingCount++;
         acc.unpaidAmount += inv.amountCents;
       }

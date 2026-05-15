@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { customers } from "@/db/schema/customers";
 import { invoices } from "@/db/schema/invoices";
 import { reminders } from "@/db/schema/reminders";
+import { invoiceLineItems } from "@/db/schema/invoice_line_items";
 import { eq, desc, and, ilike, or } from "drizzle-orm";
 
 export async function getInvoices(userId: string, query?: string, statusFilter?: string) {
@@ -53,9 +54,15 @@ export async function getInvoiceById(userId: string, invoiceId: string) {
     .where(eq(reminders.invoiceId, invoiceId))
     .orderBy(desc(reminders.sentAt));
 
+  const lineItems = await db
+    .select()
+    .from(invoiceLineItems)
+    .where(eq(invoiceLineItems.invoiceId, invoiceId));
+
   return {
     invoice,
     customer: customerQuery[0],
     reminders: reminderHistory,
+    lineItems,
   };
 }

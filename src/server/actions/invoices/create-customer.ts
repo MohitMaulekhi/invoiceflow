@@ -21,6 +21,14 @@ export async function createCustomerAction(prevState: any, formData: FormData) {
       userId: session.userId,
       name: parsed.data.name,
       email: parsed.data.email || null,
+      phone: parsed.data.phone || null,
+      companyName: parsed.data.companyName || null,
+      taxId: parsed.data.taxId || null,
+      addressLine1: parsed.data.addressLine1 || null,
+      city: parsed.data.city || null,
+      state: parsed.data.state || null,
+      zip: parsed.data.zip || null,
+      country: parsed.data.country || null,
     });
   } catch (error: any) {
     if (error.code === '23505') { // unique violation

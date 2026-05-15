@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { User, Mail, Lock, Loader2 } from "lucide-react";
+import { User, Mail, Lock, Loader2, Briefcase } from "lucide-react";
 import { signInSchema, signUpSchema, SignInInput, SignUpInput } from "@/lib/validations/auth";
 import { signInAction } from "@/server/actions/auth/sign-in";
 import { signUpAction } from "@/server/actions/auth/sign-up";
@@ -52,6 +52,7 @@ export default function AuthSlider() {
     startTransition(async () => {
       const formData = new FormData();
       formData.append("name", data.name);
+      formData.append("businessName", data.businessName);
       formData.append("email", data.email);
       formData.append("password", data.password);
       const res = await signUpAction(null, formData);
@@ -162,6 +163,22 @@ export default function AuthSlider() {
                 />
               </div>
               {signUpErrors.name && <p className="text-xs text-red-500 px-1">{signUpErrors.name.message}</p>}
+            </div>
+
+            <div className="space-y-2">
+              <div className="relative">
+                <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <input
+                  {...registerSignUp("businessName")}
+                  type="text"
+                  placeholder="Business Name"
+                  className={cn(
+                    "w-full pl-11 pr-4 py-3 bg-slate-50 border rounded-xl outline-none transition-colors",
+                    signUpErrors.businessName ? "border-red-500 focus:border-red-500" : "border-slate-100 focus:border-teal-500 focus:bg-white"
+                  )}
+                />
+              </div>
+              {signUpErrors.businessName && <p className="text-xs text-red-500 px-1">{signUpErrors.businessName.message}</p>}
             </div>
 
             <div className="space-y-2">
