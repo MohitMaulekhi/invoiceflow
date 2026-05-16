@@ -1,7 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
-import { Bell, Calendar } from "lucide-react";
+import {Calendar } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "./app-sidebar";

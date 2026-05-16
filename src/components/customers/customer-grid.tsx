@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
-import type { FormEvent } from "react";
+import type { SubmitEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { updateCustomerAction } from "@/server/actions/customers/update-customer";
 import { deleteCustomerAction } from "@/server/actions/customers/delete-customer";
@@ -90,7 +90,7 @@ export function CustomerGrid({ initialCustomers }: CustomerGridProps) {
     }
   };
 
-  const handleUpdateSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleUpdateSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     setUpdateError(null);
 
@@ -108,7 +108,7 @@ export function CustomerGrid({ initialCustomers }: CustomerGridProps) {
     });
   };
 
-  const handleCreateSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleCreateSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     setCreateError(null);
 
@@ -142,7 +142,7 @@ export function CustomerGrid({ initialCustomers }: CustomerGridProps) {
         </div>
         <div className="flex gap-4 w-full sm:w-auto">
           <Select value={sort} onValueChange={handleSortChange}>
-            <SelectTrigger className="w-full sm:w-[180px] h-12 rounded-xl bg-slate-50 border-transparent focus:border-primary focus:bg-white">
+            <SelectTrigger className="w-full sm:w-45 h-12 rounded-xl bg-slate-50 border-transparent focus:border-primary focus:bg-white">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
@@ -251,7 +251,7 @@ export function CustomerGrid({ initialCustomers }: CustomerGridProps) {
       )}
 
       <Dialog open={!!editingCustomer} onOpenChange={handleEditClose}>
-        <DialogContent className="sm:max-w-[600px] rounded-[24px] p-0 overflow-hidden bg-white border-none shadow-2xl">
+        <DialogContent className="sm:max-w-150 rounded-[24px] p-0 overflow-hidden bg-white border-none shadow-2xl">
           <div className="p-6 border-b border-slate-100 bg-slate-50">
             <DialogTitle className="text-xl font-bold text-slate-900">Edit Customer</DialogTitle>
             <DialogDescription>Update customer details and billing information.</DialogDescription>
@@ -333,7 +333,7 @@ export function CustomerGrid({ initialCustomers }: CustomerGridProps) {
       </Dialog>
 
       <Dialog open={isCreating} onOpenChange={handleCreateClose}>
-        <DialogContent className="sm:max-w-[600px] rounded-[24px] p-0 overflow-hidden bg-white border-none shadow-2xl">
+        <DialogContent className="sm:max-w-150 rounded-[24px] p-0 overflow-hidden bg-white border-none shadow-2xl">
           <div className="p-6 border-b border-slate-100 bg-slate-50">
             <DialogTitle className="text-xl font-bold text-slate-900">Add Customer</DialogTitle>
             <DialogDescription>Add a new customer to your database.</DialogDescription>

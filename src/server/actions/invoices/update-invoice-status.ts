@@ -36,8 +36,7 @@ export async function updateInvoiceStatusAction(invoiceId: string, status: Invoi
     revalidatePath("/dashboard");
     revalidatePath(`/invoices/${invoiceId}`);
     return { success: true };
-  } catch (error) {
-    console.error("Update invoice status error:", error);
+  } catch  {
     throw new Error("Failed to update invoice status.");
   }
 }

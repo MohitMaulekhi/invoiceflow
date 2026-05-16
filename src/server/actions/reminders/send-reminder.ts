@@ -58,12 +58,8 @@ export async function sendReminderAction(invoiceId: string, pdfBase64?: string) 
         content: pdfBase64.split("base64,")[1] || pdfBase64,
       }
     ] : [];
-
-    console.log("Attempting to send email via Resend to:", inv.customerEmail);
-    console.log("Using API Key:", process.env.RESEND_API_KEY?.substring(0, 8) + "...");
-    
     // Send Email
-    const { data, error } = await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: process.env.EMAIL_FROM || "InvoiceFlow <noreply@mohitmaulekhi.xyz>",
       to: [inv.customerEmail],
       subject: `Payment Reminder from ${senderName}`,
@@ -77,10 +73,8 @@ export async function sendReminderAction(invoiceId: string, pdfBase64?: string) 
       }),
     });
 
-    console.log("Resend response data:", data);
 
     if (error) {
-      console.error("Resend API Error:", error);
       await db.insert(reminders).values({
         invoiceId,
         status: "failed",
@@ -108,7 +102,6 @@ export async function sendReminderAction(invoiceId: string, pdfBase64?: string) 
 
     revalidatePath(`/invoices/${invoiceId}`);
   } catch (error) {
-    console.error(error);
     throw new Error(error instanceof Error ? error.message : "Failed to send reminder");
   }
 }

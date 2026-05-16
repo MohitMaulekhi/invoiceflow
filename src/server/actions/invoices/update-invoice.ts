@@ -64,8 +64,7 @@ export async function updateInvoiceAction(invoiceId: string, data: InvoiceInput)
     await db.delete(invoiceLineItems).where(eq(invoiceLineItems.invoiceId, invoiceId));
     await db.insert(invoiceLineItems).values(processedLineItems);
 
-  } catch (error) {
-    console.error(error);
+  } catch  {
     return { error: "Failed to update invoice" };
   }
 

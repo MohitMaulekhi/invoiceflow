@@ -11,7 +11,7 @@ export default async function NewInvoicePage() {
   const userProfile = await getUserProfile(session.userId);
 
   return (
-    <div className="max-w-[1400px] mx-auto space-y-6">
+    <div className="max-w-350 mx-auto space-y-6">
       <div>
         <Link href="/invoices" className="inline-flex items-center text-sm text-slate-500 hover:text-slate-900 mb-4 transition-colors font-medium">
           <ArrowLeft className="w-4 h-4 mr-1" /> Back to invoices

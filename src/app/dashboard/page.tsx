@@ -22,8 +22,7 @@ export default async function DashboardPage() {
   if (!data) return <div className="text-center py-20 text-slate-500">Failed to load dashboard data. Check database connection.</div>;
 
   return (
-    <div className="max-w-[1600px] mx-auto space-y-6 pb-12">
-      {/* Top Header Match Dribbble */}
+    <div className="max-w-400 mx-auto space-y-6 pb-12">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <h1 className="text-3xl font-black tracking-tight text-slate-900">Your Sales Analysis</h1>
         

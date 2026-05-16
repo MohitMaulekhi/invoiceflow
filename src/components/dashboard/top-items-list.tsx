@@ -1,8 +1,9 @@
-import { formatMoney } from "@/components/invoices/templates/types";
+import { formatMoney } from "@/components/invoices/templates/utils";
+import { TopSalesItem } from "@/types/invoice";
 
-export function TopItemsList({ items, totalSalesCents }: { items: any[], totalSalesCents: number }) {
+export function TopItemsList({ items, totalSalesCents }: { items: TopSalesItem[], totalSalesCents: number }) {
   return (
-    <div className="bg-white rounded-[32px] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 flex flex-col h-[300px]">
+    <div className="bg-white rounded-[32px] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 flex flex-col h-75">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-2 text-slate-800 font-bold">
           <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center text-xs">📦</div>

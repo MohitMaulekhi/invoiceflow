@@ -41,8 +41,7 @@ export async function signUpAction(formData: FormData) {
       email: newUser.email,
     });
 
-  } catch (error) {
-    console.error("Sign up error:", error);
+  } catch {
     return { error: "Something went wrong" };
   }
 

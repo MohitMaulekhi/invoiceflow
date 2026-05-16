@@ -17,26 +17,20 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { 
-  MinimalInvoice, 
-  ModernInvoice, 
-  ClassicInvoice, 
-  BoldInvoice, 
-  ElegantInvoice
-} from "@/components/invoices/templates";
-import { markAsPaidAction } from "@/server/actions/invoices/mark-paid";
+import { MinimalInvoice, ModernInvoice, ClassicInvoice, BoldInvoice, ElegantInvoice } from "@/components/invoices/templates";
 import { sendReminderAction } from "@/server/actions/reminders/send-reminder";
 import { deleteInvoiceAction } from "@/server/actions/invoices/delete-invoice";
 import Link from "next/link";
 import { ALLOWED_STATUS_TRANSITIONS } from "@/lib/invoice-states";
 import { updateInvoiceStatusAction } from "@/server/actions/invoices/update-invoice-status";
 import type { CustomerData, InvoiceData, InvoiceStatus, LineItemData } from "@/types/invoice";
+import type { UserProfile } from "@/types/user";
 
 interface InvoiceViewerProps {
   invoice: InvoiceData & { id: string; status: string; templateId: string };
   customer: CustomerData;
   lineItems: LineItemData[];
-  userProfile: any;
+  userProfile: UserProfile;
 }
 
 export function InvoiceViewer({ invoice, customer, lineItems, userProfile }: InvoiceViewerProps) {
@@ -50,7 +44,7 @@ export function InvoiceViewer({ invoice, customer, lineItems, userProfile }: Inv
 
   const isPaid = invoice.status === "paid" || invoice.status === "voided";
 
-  const handleUpdateStatus = (status: any) => {
+  const handleUpdateStatus = (status: InvoiceStatus) => {
     startTransition(async () => {
       await updateInvoiceStatusAction(invoice.id, status);
     });
@@ -72,8 +66,12 @@ export function InvoiceViewer({ invoice, customer, lineItems, userProfile }: Inv
         }
         await sendReminderAction(invoice.id, pdfBase64);
         alert("Reminder sent successfully!");
-      } catch (error: any) {
-        alert(error.message);
+      } catch (error: Error | unknown) {
+        if (error instanceof Error) {
+          alert(error.message);
+        } else {
+          alert("An unknown error occurred");
+        }
       }
     });
   };
@@ -175,9 +173,8 @@ export function InvoiceViewer({ invoice, customer, lineItems, userProfile }: Inv
 
       {/* Invoice Paper Preview */}
       <div className="bg-[#F0F4F8] p-4 sm:p-8 md:p-12 rounded-[32px] overflow-x-auto border border-slate-200 shadow-inner">
-        <div className="min-w-[800px] w-[800px] aspect-[1/1.414] shadow-[0_20px_60px_rgb(0,0,0,0.1)] bg-white mx-0 lg:mx-auto print:m-0 print:p-0">
+        <div className="min-w-200 w-200 aspect-[1/1.414] shadow-[0_20px_60px_rgb(0,0,0,0.1)] bg-white mx-0 lg:mx-auto print:m-0 print:p-0">
           <div ref={contentRef} className="w-full h-full bg-white">
-            {/* Wrapper for print specific styles */}
             <div className="print:block w-full h-full">
               {renderTemplate()}
             </div>

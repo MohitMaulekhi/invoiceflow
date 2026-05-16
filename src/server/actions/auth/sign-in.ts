@@ -38,8 +38,7 @@ export async function signInAction(formData: FormData) {
       email: user.email,
     });
 
-  } catch (error) {
-    console.error("Sign in error:", error);
+  } catch {
     return { error: "Something went wrong" };
   }
 

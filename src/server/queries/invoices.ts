@@ -34,6 +34,7 @@ export async function getInvoices(
       dueDate: invoices.dueDate,
       description: invoices.description,
       customerName: customers.name,
+      createdAt: invoices.createdAt,
     })
     .from(invoices)
     .innerJoin(customers, eq(invoices.customerId, customers.id))

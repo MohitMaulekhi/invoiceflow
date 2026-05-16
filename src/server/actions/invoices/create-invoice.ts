@@ -76,8 +76,7 @@ export async function createInvoiceAction(data: InvoiceInput) {
       description: "Invoice created as Draft",
     });
 
-  } catch (error) {
-    console.error(error);
+  } catch {
     return { error: "Failed to create invoice" };
   }
 

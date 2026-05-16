@@ -11,7 +11,7 @@ export function GrowthChart({ paidCount, totalCount }: { paidCount: number, tota
   ];
 
   return (
-    <div className="bg-white rounded-[32px] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 flex flex-col h-[300px]">
+    <div className="bg-white rounded-[32px] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 flex flex-col h-75">
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center gap-2 text-slate-800 font-bold">
           <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center text-xs">🚀</div>
@@ -34,8 +34,8 @@ export function GrowthChart({ paidCount, totalCount }: { paidCount: number, tota
               stroke="none"
               cornerRadius={10}
             >
-              <Cell fill="#4f46e5" /> {/* Indigo */}
-              <Cell fill="#f1f5f9" /> {/* Slate 100 */}
+              <Cell fill="#4f46e5" /> 
+              <Cell fill="#f1f5f9" /> 
             </Pie>
           </PieChart>
         </ResponsiveContainer>

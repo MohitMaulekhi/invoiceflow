@@ -3,11 +3,12 @@ import { requireAuth } from "@/lib/auth/session";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { InvoiceList } from "@/components/invoices/invoice-list";
+import type { InvoiceListItem } from "@/types/invoice";
 
 export default async function InvoicesPage() {
   const session = await requireAuth();
 
-  let invoiceList: any[] = [];
+  let invoiceList: InvoiceListItem[] = [];
   try {
     invoiceList = await getInvoices(session.userId);
   } catch (e) {
@@ -15,7 +16,7 @@ export default async function InvoicesPage() {
   }
 
   return (
-    <div className="max-w-[1600px] mx-auto space-y-8">
+    <div className="max-w-400 mx-auto space-y-8">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">Invoices</h1>

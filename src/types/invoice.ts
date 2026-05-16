@@ -77,6 +77,7 @@ export interface InvoiceListItem {
   dueDate: InvoiceRow["dueDate"];
   description: InvoiceRow["description"];
   customerName: CustomerRow["name"];
+  createdAt: InvoiceRow["createdAt"];
 }
 
 export interface InvoiceDetail {
@@ -84,4 +85,19 @@ export interface InvoiceDetail {
   customer: CustomerRow;
   activities: InvoiceActivityRow[];
   lineItems: InvoiceLineItemRow[];
+}
+
+export interface TopSalesItem {
+  name: string;
+  totalCents: number;
+}
+
+export interface ChartDataPoint {
+  name: string;
+  value: number;
+}
+
+export interface BarChartDataPoint {
+  name: string;
+  total: number;
 }

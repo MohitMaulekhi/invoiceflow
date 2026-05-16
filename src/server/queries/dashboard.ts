@@ -80,6 +80,8 @@ export async function getDashboardData(userId: string) {
       createdAt: invoices.createdAt,
       customerName: customers.name,
       customerCompany: customers.companyName,
+      dueDate: invoices.dueDate,
+      description: invoices.description,
     })
     .from(invoices)
     .innerJoin(customers, eq(invoices.customerId, customers.id))

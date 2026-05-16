@@ -1,18 +1,14 @@
 import React from "react";
 import { format } from "date-fns";
 import type { InvoiceTemplateProps } from "@/types/invoice";
-import { formatMoney } from "./types";
+import { formatMoney } from "./utils";
 
 export function ModernInvoice({ invoice, customer, lineItems, business }: InvoiceTemplateProps) {
   return (
     <div className="w-full h-full mx-auto bg-white shadow-sm overflow-hidden font-sans flex flex-col">
       <div className="bg-primary text-primary-foreground p-12 flex justify-between items-center">
         <div>
-          {business.logoUrl ? (
-            <img src={business.logoUrl} alt={business.name} className="h-12 brightness-0 invert" />
-          ) : (
             <h1 className="text-3xl font-bold tracking-tight">{business.name}</h1>
-          )}
         </div>
         <div className="text-right">
           <h2 className="text-2xl font-semibold opacity-90 uppercase tracking-widest mb-1">Invoice</h2>

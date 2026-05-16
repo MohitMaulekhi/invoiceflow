@@ -1,5 +1,4 @@
 import { Html, Body, Head, Heading, Hr, Container, Preview, Section, Text } from "@react-email/components";
-import * as React from "react";
 
 interface ReminderEmailProps {
   senderName: string;

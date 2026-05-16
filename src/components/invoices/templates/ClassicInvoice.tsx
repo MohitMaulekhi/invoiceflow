@@ -1,18 +1,14 @@
 import React from "react";
 import { format } from "date-fns";
 import type { InvoiceTemplateProps } from "@/types/invoice";
-import { formatMoney } from "./types";
+import { formatMoney } from "./utils";
 
 export function ClassicInvoice({ invoice, customer, lineItems, business }: InvoiceTemplateProps) {
   return (
     <div className="w-full h-full mx-auto bg-white p-12 font-serif text-slate-900 border border-slate-200 flex flex-col">
       <div className="border-b-4 border-slate-900 pb-8 mb-8 flex justify-between items-end">
         <div>
-          {business.logoUrl ? (
-            <img src={business.logoUrl} alt={business.name} className="h-16 mb-4" />
-          ) : (
             <h1 className="text-3xl font-bold uppercase tracking-wide mb-2">{business.name}</h1>
-          )}
           <div className="text-sm space-y-1">
             <p>{business.address}</p>
             <p>{business.email}</p>

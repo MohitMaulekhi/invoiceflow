@@ -5,10 +5,10 @@ import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { ArrowLeft, Clock } from "lucide-react";
-import { format } from "date-fns";
 import { InvoiceViewer } from "@/components/invoices/invoice-viewer";
 import { cn } from "@/lib/utils";
-import { formatMoney } from "@/components/invoices/templates/types";
+import { formatMoney } from "@/components/invoices/templates/utils";
+import { invoiceActivities } from "@/db/schema/invoice_activities";
 
 const formatIST = (dateStr: string | Date) => {
   return new Intl.DateTimeFormat('en-IN', {
@@ -36,7 +36,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
   const { invoice, customer, activities, lineItems } = data;
 
   return (
-    <div className="max-w-[1400px] mx-auto space-y-6">
+    <div className="max-w-350 mx-auto space-y-6">
       <div>
         <Link href="/invoices" className="inline-flex items-center text-sm text-slate-500 hover:text-slate-900 mb-4 transition-colors font-medium">
           <ArrowLeft className="w-4 h-4 mr-1" /> Back to invoices
@@ -65,15 +65,15 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
         {/* Main Invoice Viewer & Actions */}
         <div className="flex-1 w-full">
           <InvoiceViewer 
-            invoice={invoice as any} 
-            customer={customer as any} 
-            lineItems={lineItems as any} 
-            userProfile={userProfile as any}
+            invoice={invoice} 
+            customer={customer} 
+            lineItems={lineItems} 
+            userProfile={userProfile}
           />
         </div>
 
         {/* Sidebar Timeline & History */}
-        <div className="w-full xl:w-[400px] shrink-0 space-y-6">
+        <div className="w-full xl:w-100 shrink-0 space-y-6">
           <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 rounded-[32px] bg-white overflow-hidden">
             <CardHeader className="bg-white border-b border-slate-100 pb-4 p-8">
               <CardTitle className="text-lg text-slate-900 font-bold tracking-tight flex items-center gap-2">
@@ -98,7 +98,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
                   </div>
                 )}
 
-                {activities.map((act: any, index: number) => {
+                {activities.map((act: typeof invoiceActivities.$inferSelect, index: number) => {
                   const isCreationInjected = !activities.length || activities[0]?.type !== 'creation';
                   const visualIndex = isCreationInjected ? index + 1 : index;
                   const isLeft = visualIndex % 2 !== 0;

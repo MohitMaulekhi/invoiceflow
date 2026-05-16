@@ -1,14 +1,15 @@
 "use client";
 
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
-import { formatMoney } from "@/components/invoices/templates/types";
+import { formatMoney } from "@/components/invoices/templates/utils";
+import { BarChartDataPoint } from "@/types/invoice";
 
-export function TotalSalesChart({ data, total }: { data: any[], total: number }) {
+export function TotalSalesChart({ data }: { data: BarChartDataPoint[], total: number }) {
   // Find max value to color it differently
   const maxValue = Math.max(...data.map(d => d.total));
 
   return (
-    <div className="bg-white rounded-[32px] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 flex flex-col h-full min-h-[300px]">
+    <div className="bg-white rounded-[32px] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 flex flex-col h-full min-h-75">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-2 text-slate-800 font-bold">
           <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center text-xs font-serif">₹</div>

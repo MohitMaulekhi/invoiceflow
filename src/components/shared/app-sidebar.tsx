@@ -3,10 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { FileText, Users, LogOut, Settings, LayoutDashboard, Asterisk } from "lucide-react";
+import { FileText, Users, LogOut, Settings, LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { signOutAction } from "@/server/actions/auth/sign-out";
-import { useTransition } from "react";
 import logo from "@/assets/logo.png";
 import {
   Sidebar,

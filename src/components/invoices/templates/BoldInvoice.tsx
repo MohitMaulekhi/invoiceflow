@@ -1,7 +1,6 @@
-import React from "react";
 import { format } from "date-fns";
 import type { InvoiceTemplateProps } from "@/types/invoice";
-import { formatMoney } from "./types";
+import { formatMoney } from "./utils";
 
 export function BoldInvoice({ invoice, customer, lineItems, business }: InvoiceTemplateProps) {
   return (
@@ -12,11 +11,8 @@ export function BoldInvoice({ invoice, customer, lineItems, business }: InvoiceT
           <p className="text-xl font-bold opacity-80">#{invoice.invoiceNumber}</p>
         </div>
         <div className="text-right">
-          {business.logoUrl ? (
-            <img src={business.logoUrl} alt={business.name} className="h-16 ml-auto brightness-0 invert" />
-          ) : (
             <h1 className="text-3xl font-black uppercase tracking-tight">{business.name}</h1>
-          )}
+
         </div>
       </div>
 

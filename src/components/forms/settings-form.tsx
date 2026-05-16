@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2, LogOut } from "lucide-react";
-import type { UserProfile } from "@/server/queries/users";
+import { UserProfile } from "@/types";
 
 export function SettingsForm({ user }: { user: UserProfile }) {
   const [state, setState] = useState<{ error?: string; success?: string } | null>(null);
@@ -93,7 +93,7 @@ export function SettingsForm({ user }: { user: UserProfile }) {
       </form>
 
       {/* Profile & Security Card (Right Side on Desktop) */}
-      <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 rounded-[24px] bg-white overflow-hidden w-full lg:w-[400px] shrink-0 order-1 lg:order-2">
+      <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 rounded-[24px] bg-white overflow-hidden w-full lg:w-100 shrink-0 order-1 lg:order-2">
         <CardHeader className="p-8 border-b border-slate-100">
           <CardTitle className="text-xl text-slate-900 font-semibold tracking-tight">Profile</CardTitle>
           <CardDescription className="text-sm text-slate-500 mt-1">

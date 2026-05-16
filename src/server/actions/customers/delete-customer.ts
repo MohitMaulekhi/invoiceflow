@@ -17,8 +17,7 @@ export async function deleteCustomerAction(customerId: string) {
     
     revalidatePath("/customers");
     return { success: true };
-  } catch (error) {
-    console.error("Delete error:", error);
+  } catch {
     throw new Error("Failed to delete customer.");
   }
 }

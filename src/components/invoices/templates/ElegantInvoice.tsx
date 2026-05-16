@@ -1,17 +1,13 @@
 import React from "react";
 import { format } from "date-fns";
 import type { InvoiceTemplateProps } from "@/types/invoice";
-import { formatMoney } from "./types";
+import { formatMoney } from "./utils";
 
 export function ElegantInvoice({ invoice, customer, lineItems, business }: InvoiceTemplateProps) {
   return (
     <div className="w-full h-full mx-auto bg-[#faf9f6] p-16 font-serif text-slate-800 shadow-sm border border-stone-200 flex flex-col">
       <div className="text-center mb-16 space-y-6">
-        {business.logoUrl ? (
-          <img src={business.logoUrl} alt={business.name} className="h-16 mx-auto" />
-        ) : (
           <h1 className="text-4xl font-normal tracking-widest uppercase text-stone-800">{business.name}</h1>
-        )}
         <div className="w-16 h-px bg-stone-300 mx-auto"></div>
         <div className="text-sm tracking-widest text-stone-500 uppercase space-y-1">
           <p>{business.address}</p>

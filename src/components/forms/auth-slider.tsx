@@ -62,7 +62,7 @@ export default function AuthSlider() {
   };
 
   return (
-    <div className="relative w-full max-w-4xl min-h-[600px] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
+    <div className="relative w-full max-w-4xl min-h-150 bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
       
       {/* Background patterns */}
       <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-primary/10" />
@@ -251,7 +251,7 @@ export default function AuthSlider() {
         transition={{ ease: "easeInOut", duration: 0.6 }}
       >
         {/* Subtle overlay patterns */}
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)] [background-size:24px_24px]" />
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-size-[24px_24px]" />
         
         <AnimatePresence mode="wait">
           {!isSignUp ? (

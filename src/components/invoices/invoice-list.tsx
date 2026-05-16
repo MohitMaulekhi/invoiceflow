@@ -19,21 +19,21 @@ import {
   DropdownMenuPortal,
 } from "@/components/ui/dropdown-menu";
 import { Search, MoreVertical, Edit2, Trash2, Send, CheckCircle, Clock, ExternalLink } from "lucide-react";
-import { formatMoney } from "@/components/invoices/templates/types";
+import { formatMoney } from "@/components/invoices/templates/utils";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ALLOWED_STATUS_TRANSITIONS } from "@/lib/invoice-states";
-import type { InvoiceStatus } from "@/types/invoice";
+import type { InvoiceStatus, InvoiceListItem } from "@/types/invoice";
 
-export function InvoiceList({ initialInvoices }: { initialInvoices: any[] }) {
+export function InvoiceList({ initialInvoices }: { initialInvoices: InvoiceListItem[] }) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const [optimisticInvoices, setOptimisticInvoices] = useOptimistic(
     initialInvoices,
-    (state, { id, status }: { id: string; status: string }) =>
+    (state, { id, status }: { id: string; status: InvoiceStatus }) =>
       state.map((inv) => (inv.id === id ? { ...inv, status } : inv))
   );
 
@@ -44,7 +44,7 @@ export function InvoiceList({ initialInvoices }: { initialInvoices: any[] }) {
       const matchesStatus = statusFilter === "all" || inv.status === statusFilter;
       return matchesSearch && matchesStatus;
     });
-  }, [initialInvoices, search, statusFilter]);
+  }, [search, statusFilter, optimisticInvoices]);
 
   const handleDelete = (id: string) => {
     if (confirm("Are you sure you want to delete this invoice?")) {
@@ -54,7 +54,7 @@ export function InvoiceList({ initialInvoices }: { initialInvoices: any[] }) {
     }
   };
 
-  const handleUpdateStatus = (id: string, status: any) => {
+  const handleUpdateStatus = (id: string, status: InvoiceStatus) => {
     startTransition(async () => {
       setOptimisticInvoices({ id, status });
       await updateInvoiceStatusAction(id, status);
@@ -66,8 +66,12 @@ export function InvoiceList({ initialInvoices }: { initialInvoices: any[] }) {
       try {
         await sendReminderAction(id);
         alert("Reminder sent successfully!");
-      } catch (error: any) {
-        alert(error.message);
+      } catch (error: Error | unknown) {
+        if (error instanceof Error) {
+          alert(error.message);
+        } else {
+          alert("An unknown error occurred");
+        }
       }
     });
   };
@@ -87,7 +91,7 @@ export function InvoiceList({ initialInvoices }: { initialInvoices: any[] }) {
         </div>
         <div className="w-full sm:w-auto">
           <Select value={statusFilter} onValueChange={(val) => setStatusFilter(val || "all")}>
-            <SelectTrigger className="w-full sm:w-[180px] h-12 rounded-xl bg-slate-50 border-transparent focus:border-primary focus:bg-white">
+            <SelectTrigger className="w-full sm:w-45 h-12 rounded-xl bg-slate-50 border-transparent focus:border-primary focus:bg-white">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>

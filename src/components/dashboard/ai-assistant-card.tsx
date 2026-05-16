@@ -3,11 +3,6 @@
 import { useState, useTransition } from "react";
 import { ArrowRight, Sparkles, Loader2 } from "lucide-react";
 import { analyzeSalesAction } from "@/server/actions/ai/analyze-sales";
-import Lottie from "lottie-react";
-
-// For the dark card abstract background animation, we can just use a subtle CSS gradient/pattern
-// Or an abstract Lottie if we had one. We'll use a sleek CSS gradient and blur effect.
-
 export function AIAssistantCard() {
   const [insight, setInsight] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +21,7 @@ export function AIAssistantCard() {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-slate-900 via-teal-900 to-slate-900 text-white p-8 h-full min-h-[300px] shadow-lg flex flex-col">
+    <div className="relative overflow-hidden rounded-[32px] bg-linear-to-br from-slate-900 via-teal-900 to-slate-900 text-white p-8 h-full min-h-75 shadow-lg flex flex-col">
       {/* Abstract Background Elements */}
       <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-teal-500/20 blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-indigo-500/20 blur-3xl pointer-events-none" />

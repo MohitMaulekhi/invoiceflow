@@ -1,12 +1,13 @@
 "use client";
 
-import { LineChart, Line, ResponsiveContainer, Area, AreaChart } from "recharts";
-import { formatMoney } from "@/components/invoices/templates/types";
+import { ResponsiveContainer, Area, AreaChart } from "recharts";
+import { formatMoney } from "@/components/invoices/templates/utils";
+import { ChartDataPoint } from "@/types/invoice";
 
-export function SalesRevenueChart({ paidAmount, unpaidAmount, receivedData, orderedData }: { paidAmount: number, unpaidAmount: number, receivedData: any[], orderedData: any[] }) {
+export function SalesRevenueChart({ paidAmount, unpaidAmount, receivedData, orderedData }: { paidAmount: number, unpaidAmount: number, receivedData: ChartDataPoint[], orderedData: ChartDataPoint[] }) {
 
   return (
-    <div className="bg-white rounded-[32px] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 h-full min-h-[300px] flex flex-col">
+    <div className="bg-white rounded-[32px] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 h-full min-h-75 flex flex-col">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-2 text-slate-800 font-bold">
           <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center text-xs">📈</div>
@@ -17,15 +18,12 @@ export function SalesRevenueChart({ paidAmount, unpaidAmount, receivedData, orde
       <div className="grid grid-cols-2 gap-4 flex-1">
         {/* Received Amount Sparkline */}
         <div className="flex flex-col h-full">
-          <p className="text-emerald-500 text-[10px] font-bold mb-1 flex items-center gap-1">
-            ↗ 24% for 1 day
-          </p>
           <p className="text-2xl font-black text-slate-900 tracking-tight">{formatMoney(paidAmount)}</p>
           <div className="flex items-center gap-1 mb-2">
             <div className="w-2 h-2 rounded-full bg-emerald-500" />
             <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Received Amount</span>
           </div>
-          <div className="flex-1 w-full min-h-[60px] relative overflow-hidden">
+          <div className="flex-1 w-full min-h-15 relative overflow-hidden">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={receivedData}>
                 <defs>
@@ -50,7 +48,7 @@ export function SalesRevenueChart({ paidAmount, unpaidAmount, receivedData, orde
             <div className="w-2 h-2 rounded-full bg-rose-500" />
             <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Pending Amount</span>
           </div>
-          <div className="flex-1 w-full min-h-[60px] relative overflow-hidden">
+          <div className="flex-1 w-full min-h-15 relative overflow-hidden">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={orderedData}>
                 <defs>

@@ -39,8 +39,7 @@ export async function analyzeSalesAction() {
     } else {
       return { error: "Failed to generate insights." };
     }
-  } catch (error) {
-    console.error("AI Analysis Error:", error);
+  } catch {
     return { error: "An error occurred while analyzing sales data." };
   }
 }
