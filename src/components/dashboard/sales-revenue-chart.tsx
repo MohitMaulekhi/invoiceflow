@@ -2,7 +2,6 @@
 
 import { LineChart, Line, ResponsiveContainer, Area, AreaChart } from "recharts";
 import { formatMoney } from "@/components/invoices/templates/types";
-import { MoreVertical } from "lucide-react";
 
 export function SalesRevenueChart({ paidAmount, unpaidAmount, receivedData, orderedData }: { paidAmount: number, unpaidAmount: number, receivedData: any[], orderedData: any[] }) {
 
@@ -13,9 +12,6 @@ export function SalesRevenueChart({ paidAmount, unpaidAmount, receivedData, orde
           <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center text-xs">📈</div>
           <span>Sales Revenue</span>
         </div>
-        <button className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-50 transition-colors">
-          <MoreVertical className="w-4 h-4" />
-        </button>
       </div>
 
       <div className="grid grid-cols-2 gap-4 flex-1">

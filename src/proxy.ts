@@ -5,11 +5,12 @@ import { jwtVerify } from "jose";
 const secret = new TextEncoder().encode(process.env.JWT_SECRET || "super-secret-jwt-key-for-dev");
 const protectedRoutes = ["/dashboard", "/invoices", "/customers"];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get("session")?.value;
   const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
   const isAuthRoute = pathname === "/login";
+  const isRootRoute = pathname === "/";
 
   // Check token validity
   let isValid = false;
@@ -19,6 +20,15 @@ export async function middleware(request: NextRequest) {
       isValid = true;
     } catch {
       isValid = false;
+    }
+  }
+
+  // Handle Root Route
+  if (isRootRoute) {
+    if (isValid) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    } else {
+      return NextResponse.redirect(new URL("/login", request.url));
     }
   }
 

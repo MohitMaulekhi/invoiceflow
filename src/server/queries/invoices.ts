@@ -1,9 +1,9 @@
 import { db } from "@/db";
 import { customers } from "@/db/schema/customers";
 import { invoices } from "@/db/schema/invoices";
-import { reminders } from "@/db/schema/reminders";
+import { invoiceActivities } from "@/db/schema/invoice_activities";
 import { invoiceLineItems } from "@/db/schema/invoice_line_items";
-import { eq, desc, and, ilike, or } from "drizzle-orm";
+import { eq, desc, asc, and, ilike, or } from "drizzle-orm";
 
 export async function getInvoices(userId: string, query?: string, statusFilter?: string) {
   let conditions = [eq(invoices.userId, userId)];
@@ -48,11 +48,11 @@ export async function getInvoiceById(userId: string, invoiceId: string) {
     .where(and(eq(customers.id, invoice.customerId), eq(customers.userId, userId)))
     .limit(1);
     
-  const reminderHistory = await db
+  const activities = await db
     .select()
-    .from(reminders)
-    .where(eq(reminders.invoiceId, invoiceId))
-    .orderBy(desc(reminders.sentAt));
+    .from(invoiceActivities)
+    .where(eq(invoiceActivities.invoiceId, invoiceId))
+    .orderBy(asc(invoiceActivities.createdAt));
 
   const lineItems = await db
     .select()
@@ -62,7 +62,7 @@ export async function getInvoiceById(userId: string, invoiceId: string) {
   return {
     invoice,
     customer: customerQuery[0],
-    reminders: reminderHistory,
+    activities,
     lineItems,
   };
 }

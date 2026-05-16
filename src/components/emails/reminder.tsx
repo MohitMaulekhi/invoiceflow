@@ -2,6 +2,7 @@ import { Html, Body, Head, Heading, Hr, Container, Preview, Section, Text } from
 import * as React from "react";
 
 interface ReminderEmailProps {
+  senderName: string;
   customerName: string;
   invoiceDescription: string;
   amountFormatted: string;
@@ -9,6 +10,7 @@ interface ReminderEmailProps {
 }
 
 export default function ReminderEmail({
+  senderName,
   customerName,
   invoiceDescription,
   amountFormatted,
@@ -17,13 +19,13 @@ export default function ReminderEmail({
   return (
     <Html>
       <Head />
-      <Preview>Payment Reminder: Invoice for {invoiceDescription}</Preview>
+      <Preview>Payment Reminder from {senderName}</Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>Payment Reminder</Heading>
+          <Heading style={h1}>{senderName}</Heading>
           <Text style={text}>Hi {customerName},</Text>
           <Text style={text}>
-            This is a friendly reminder that your invoice for <strong>{invoiceDescription}</strong> is due on <strong>{dueDateFormatted}</strong>.
+            This is a friendly reminder from <strong>{senderName}</strong> regarding your recent invoice for <strong>{invoiceDescription}</strong>. The payment is due on <strong>{dueDateFormatted}</strong>.
           </Text>
           <Section style={section}>
             <Text style={amountText}>Amount Due: {amountFormatted}</Text>
@@ -31,11 +33,14 @@ export default function ReminderEmail({
           <Text style={text}>
             Please process this payment at your earliest convenience. If you have already paid, please disregard this email.
           </Text>
+          <Text style={text}>
+            <em>Please find the official PDF copy of your invoice attached to this email.</em>
+          </Text>
           <Hr style={hr} />
           <Text style={footer}>
             Thank you for your business!
             <br />
-            BinaryAutomates
+            {senderName}
           </Text>
         </Container>
       </Body>
@@ -66,7 +71,7 @@ const section = {
 };
 
 const h1 = {
-  color: "#333",
+  color: "#0d9488",
   fontSize: "24px",
   fontWeight: "600",
   lineHeight: "40px",

@@ -6,7 +6,6 @@ import { SalesRevenueChart } from "@/components/dashboard/sales-revenue-chart";
 import { RecentSalesList } from "@/components/dashboard/recent-sales-list";
 import { GrowthChart } from "@/components/dashboard/growth-chart";
 import { TopItemsList } from "@/components/dashboard/top-items-list";
-import { Filter, Maximize } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -34,15 +33,6 @@ export default async function DashboardPage() {
               + Add Invoice
             </Button>
           </Link>
-          <button className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors">
-            <span className="font-serif italic font-bold">◐</span>
-          </button>
-          <button className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors">
-            <Maximize className="w-4 h-4" />
-          </button>
-          <button className="h-10 rounded-full bg-white border border-slate-200 flex items-center px-4 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors gap-2 shadow-sm">
-            <Filter className="w-4 h-4" /> Filter
-          </button>
         </div>
       </div>
 

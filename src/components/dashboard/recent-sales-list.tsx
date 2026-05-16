@@ -1,6 +1,6 @@
 import { formatMoney } from "@/components/invoices/templates/types";
 import { formatDistanceToNow } from "date-fns";
-import { ExternalLink, MoreVertical, Filter } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -11,14 +11,6 @@ export function RecentSalesList({ invoices }: { invoices: any[] }) {
         <div className="flex items-center gap-2 text-slate-800 font-bold">
           <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center text-xs">📄</div>
           <span>Recent Invoices</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <button className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-50 transition-colors">
-            <Filter className="w-3.5 h-3.5" />
-          </button>
-          <div className="bg-slate-50 border border-slate-100 rounded-full px-4 py-1.5 text-xs font-semibold text-slate-600 flex items-center gap-1 cursor-pointer">
-            Week <span className="text-[10px]">▼</span>
-          </div>
         </div>
       </div>
 

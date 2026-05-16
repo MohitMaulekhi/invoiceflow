@@ -4,7 +4,7 @@ import { InvoiceTemplateProps, formatMoney } from "./types";
 
 export function ClassicInvoice({ invoice, customer, lineItems, business }: InvoiceTemplateProps) {
   return (
-    <div className="w-full max-w-3xl mx-auto bg-white p-12 font-serif text-slate-900 border border-slate-200">
+    <div className="w-full h-full mx-auto bg-white p-12 font-serif text-slate-900 border border-slate-200 flex flex-col">
       <div className="border-b-4 border-slate-900 pb-8 mb-8 flex justify-between items-end">
         <div>
           {business.logoUrl ? (
@@ -76,7 +76,7 @@ export function ClassicInvoice({ invoice, customer, lineItems, business }: Invoi
         </tbody>
       </table>
 
-      <div className="flex justify-end mb-12">
+      <div className="flex justify-end mb-auto">
         <table className="w-64 border-collapse">
           <tbody>
             <tr>

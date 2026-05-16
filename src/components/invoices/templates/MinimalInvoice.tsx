@@ -4,7 +4,7 @@ import { InvoiceTemplateProps, formatMoney } from "./types";
 
 export function MinimalInvoice({ invoice, customer, lineItems, business }: InvoiceTemplateProps) {
   return (
-    <div className="w-full max-w-3xl mx-auto bg-white p-12 text-slate-800 font-sans">
+    <div className="w-full h-full mx-auto bg-white p-12 text-slate-800 font-sans flex flex-col">
       <div className="flex justify-between items-end mb-16">
         <div>
           {business.logoUrl ? (
@@ -75,7 +75,7 @@ export function MinimalInvoice({ invoice, customer, lineItems, business }: Invoi
         </tbody>
       </table>
 
-      <div className="flex justify-end mb-16">
+      <div className="flex justify-end mb-auto">
         <div className="w-64 space-y-3 text-sm">
           <div className="flex justify-between text-slate-500">
             <p>Subtotal</p>

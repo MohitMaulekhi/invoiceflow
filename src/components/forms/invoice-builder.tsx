@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createInvoiceAction } from "@/server/actions/invoices/create-invoice";
+import { updateInvoiceAction } from "@/server/actions/invoices/update-invoice";
 import { invoiceSchema, InvoiceInput } from "@/lib/validations/invoice";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,9 +24,33 @@ import {
 
 // Removed dummyBusiness
 
-export function InvoiceBuilder({ customers, userProfile }: { customers: any[], userProfile: any }) {
+export function InvoiceBuilder({ customers, userProfile, initialData }: { customers: any[], userProfile: any, initialData?: any }) {
   const [isPending, startTransition] = useTransition();
   const [serverError, setServerError] = useState<string | null>(null);
+
+  const isEditing = !!initialData;
+
+  const defaultValues = initialData ? {
+    templateId: initialData.invoice.templateId || "minimal",
+    customerId: initialData.invoice.customerId,
+    description: initialData.invoice.description,
+    taxRate: initialData.invoice.subtotalCents > 0 ? (initialData.invoice.taxCents / (initialData.invoice.subtotalCents - initialData.invoice.discountCents)) * 100 || 0 : 0,
+    discountAmount: initialData.invoice.discountCents / 100 || 0,
+    dueDate: new Date(initialData.invoice.dueDate).toISOString().split('T')[0],
+    notes: initialData.invoice.notes || "",
+    terms: initialData.invoice.terms || "",
+    lineItems: initialData.lineItems.length > 0 ? initialData.lineItems.map((li: any) => ({
+      description: li.description,
+      quantity: li.quantity,
+      unitPrice: li.unitPriceCents / 100
+    })) : [{ description: "", quantity: 1, unitPrice: 0 }],
+  } : {
+    templateId: "minimal",
+    taxRate: 0,
+    discountAmount: 0,
+    lineItems: [{ description: "", quantity: 1, unitPrice: 0 }],
+    dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+  };
 
   const {
     register,
@@ -36,13 +61,7 @@ export function InvoiceBuilder({ customers, userProfile }: { customers: any[], u
     formState: { errors },
   } = useForm<InvoiceInput>({
     resolver: zodResolver(invoiceSchema),
-    defaultValues: {
-      templateId: "minimal",
-      taxRate: 0,
-      discountAmount: 0,
-      lineItems: [{ description: "", quantity: 1, unitPrice: 0 }],
-      dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // +14 days
-    },
+    defaultValues: defaultValues as any,
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -56,7 +75,10 @@ export function InvoiceBuilder({ customers, userProfile }: { customers: any[], u
   const onSubmit = (data: InvoiceInput) => {
     setServerError(null);
     startTransition(async () => {
-      const res = await createInvoiceAction(data);
+      const res = isEditing 
+        ? await updateInvoiceAction(initialData.invoice.id, data)
+        : await createInvoiceAction(data);
+        
       if (res?.error) setServerError(res.error);
     });
   };
@@ -249,7 +271,7 @@ export function InvoiceBuilder({ customers, userProfile }: { customers: any[], u
                   <Input type="number" step="0.1" min="0" {...register("taxRate", { valueAsNumber: true })} />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-700">Discount ($)</label>
+                  <label className="text-sm font-semibold text-slate-700">Discount (₹)</label>
                   <Input type="number" step="0.01" min="0" {...register("discountAmount", { valueAsNumber: true })} />
                 </div>
               </div>
@@ -270,16 +292,18 @@ export function InvoiceBuilder({ customers, userProfile }: { customers: any[], u
 
           <Button type="submit" className="w-full h-12 text-base font-semibold shadow-lg shadow-primary/20" disabled={isPending}>
             {isPending ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
-            {isPending ? "Generating Invoice..." : "Create Invoice"}
+            {isPending ? "Saving Invoice..." : isEditing ? "Save Changes" : "Create Invoice"}
           </Button>
         </form>
       </div>
 
       {/* RIGHT: Live Preview */}
-      <div className="flex-1 w-full bg-slate-200/50 rounded-2xl p-4 md:p-8 flex items-center justify-center overflow-x-auto min-h-[800px] border border-slate-200">
-        <div className="origin-top scale-[0.8] md:scale-90 xl:scale-100 transition-transform duration-300 w-full max-w-[800px]">
-          <div className="shadow-2xl ring-1 ring-black/5 bg-white">
-            {renderTemplate()}
+      <div className="flex-1 w-full bg-slate-200/50 rounded-2xl p-4 md:p-8 flex justify-center border border-slate-200 overflow-hidden items-start">
+        <div className="relative w-[320px] h-[452px] sm:w-[480px] sm:h-[678px] md:w-[640px] md:h-[905px] xl:w-[800px] xl:h-[1131px] transition-all duration-300">
+          <div className="absolute top-0 left-0 w-[800px] h-[1131px] origin-top-left scale-[0.4] sm:scale-[0.6] md:scale-[0.8] xl:scale-100 shadow-2xl ring-1 ring-black/5 bg-white transition-transform duration-300">
+            <div className="w-full h-full">
+              {renderTemplate()}
+            </div>
           </div>
         </div>
       </div>

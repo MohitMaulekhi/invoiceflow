@@ -4,7 +4,7 @@ import { InvoiceTemplateProps, formatMoney } from "./types";
 
 export function ElegantInvoice({ invoice, customer, lineItems, business }: InvoiceTemplateProps) {
   return (
-    <div className="w-full max-w-3xl mx-auto bg-[#faf9f6] p-16 font-serif text-slate-800 shadow-sm border border-stone-200">
+    <div className="w-full h-full mx-auto bg-[#faf9f6] p-16 font-serif text-slate-800 shadow-sm border border-stone-200 flex flex-col">
       <div className="text-center mb-16 space-y-6">
         {business.logoUrl ? (
           <img src={business.logoUrl} alt={business.name} className="h-16 mx-auto" />
@@ -64,7 +64,7 @@ export function ElegantInvoice({ invoice, customer, lineItems, business }: Invoi
         </tbody>
       </table>
 
-      <div className="flex justify-end mb-16">
+      <div className="flex justify-end mb-auto">
         <div className="w-72 space-y-4">
           <div className="flex justify-between text-stone-500 text-sm tracking-wider">
             <p>Subtotal</p>

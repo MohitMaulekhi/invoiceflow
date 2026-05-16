@@ -4,7 +4,7 @@ import { InvoiceTemplateProps, formatMoney } from "./types";
 
 export function BoldInvoice({ invoice, customer, lineItems, business }: InvoiceTemplateProps) {
   return (
-    <div className="w-full max-w-3xl mx-auto bg-slate-50 font-sans shadow-lg overflow-hidden">
+    <div className="w-full h-full mx-auto bg-slate-50 font-sans shadow-lg overflow-hidden flex flex-col">
       <div className="bg-slate-900 text-white p-12 flex justify-between items-center">
         <div>
           <h2 className="text-5xl font-black uppercase tracking-tighter mb-2 text-primary">INVOICE</h2>
@@ -19,9 +19,9 @@ export function BoldInvoice({ invoice, customer, lineItems, business }: InvoiceT
         </div>
       </div>
 
-      <div className="flex bg-white">
+      <div className="flex bg-white flex-1">
         {/* Main Content */}
-        <div className="w-2/3 p-12">
+        <div className="w-2/3 p-12 flex flex-col">
           <div className="mb-12">
             <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Billed To</h3>
             <div className="text-slate-800 space-y-1">
@@ -36,7 +36,7 @@ export function BoldInvoice({ invoice, customer, lineItems, business }: InvoiceT
             </div>
           </div>
 
-          <table className="w-full text-left text-sm mb-12">
+          <table className="w-full text-left text-sm mb-auto">
             <thead>
               <tr className="border-b-4 border-slate-900 text-slate-900">
                 <th className="py-3 font-black uppercase tracking-wider">Item</th>

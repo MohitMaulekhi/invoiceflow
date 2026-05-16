@@ -1,6 +1,4 @@
 import { formatMoney } from "@/components/invoices/templates/types";
-import { MoreVertical } from "lucide-react";
-import Link from "next/link";
 
 export function TopItemsList({ items, totalSalesCents }: { items: any[], totalSalesCents: number }) {
   return (
@@ -10,9 +8,6 @@ export function TopItemsList({ items, totalSalesCents }: { items: any[], totalSa
           <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center text-xs">📦</div>
           <span>Top Item Sales</span>
         </div>
-        <Link href="/invoices" className="text-xs font-bold text-slate-400 hover:text-slate-900 transition-colors flex items-center gap-1">
-          View All <span className="text-[10px]">›</span>
-        </Link>
       </div>
 
       <div className="flex-1 overflow-y-auto space-y-4 pr-2">

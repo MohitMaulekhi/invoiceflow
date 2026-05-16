@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { FileText, Users, LogOut, Settings, LayoutDashboard, Asterisk } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { signOutAction } from "@/server/actions/auth/sign-out";
 import { useTransition } from "react";
+import logo from "@/assets/logo.png";
 import {
   Sidebar,
   SidebarContent,
@@ -39,7 +41,7 @@ export function AppSidebar() {
     <Sidebar variant="sidebar" className="border-none bg-transparent">
       <SidebarHeader className="h-24 flex items-center justify-center flex-row">
         <div className="flex items-center justify-center w-full">
-          <Asterisk className="w-14 h-14 text-primary" strokeWidth={3} />
+          <Image src={logo} alt="Invoice Flow Logo" className="w-14 h-14 object-contain" />
         </div>
       </SidebarHeader>
       

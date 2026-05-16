@@ -1,7 +1,6 @@
 "use client";
 
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
-import { MoreVertical } from "lucide-react";
 
 export function GrowthChart({ paidCount, totalCount }: { paidCount: number, totalCount: number }) {
   const percentage = totalCount > 0 ? Math.round((paidCount / totalCount) * 100) : 0;
@@ -18,9 +17,6 @@ export function GrowthChart({ paidCount, totalCount }: { paidCount: number, tota
           <div className="w-6 h-6 rounded bg-slate-100 flex items-center justify-center text-xs">🚀</div>
           <span>Collection Rate</span>
         </div>
-        <button className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-50 transition-colors">
-          <MoreVertical className="w-4 h-4" />
-        </button>
       </div>
 
       <div className="flex-1 w-full h-full relative flex items-center justify-center">

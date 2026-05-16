@@ -4,7 +4,7 @@ import { InvoiceTemplateProps, formatMoney } from "./types";
 
 export function ModernInvoice({ invoice, customer, lineItems, business }: InvoiceTemplateProps) {
   return (
-    <div className="w-full max-w-3xl mx-auto bg-white shadow-sm overflow-hidden font-sans">
+    <div className="w-full h-full mx-auto bg-white shadow-sm overflow-hidden font-sans flex flex-col">
       <div className="bg-primary text-primary-foreground p-12 flex justify-between items-center">
         <div>
           {business.logoUrl ? (
@@ -19,7 +19,7 @@ export function ModernInvoice({ invoice, customer, lineItems, business }: Invoic
         </div>
       </div>
 
-      <div className="p-12">
+      <div className="p-12 flex flex-col flex-1">
         <div className="flex justify-between items-start mb-12">
           <div className="space-y-1 text-sm text-slate-600">
             <p className="font-semibold text-slate-900 mb-2">From:</p>
@@ -78,7 +78,7 @@ export function ModernInvoice({ invoice, customer, lineItems, business }: Invoic
           </tbody>
         </table>
 
-        <div className="flex justify-end mb-12">
+        <div className="flex justify-end mb-auto">
           <div className="w-72 space-y-3 p-6 bg-slate-50 rounded-xl border border-slate-100 text-sm">
             <div className="flex justify-between text-slate-600">
               <p>Subtotal</p>
