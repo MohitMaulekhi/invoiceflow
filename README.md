@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# InvoiceFlow
+
+InvoiceFlow is a full-stack web application designed for small businesses to manage invoices, track payments, and send automated email reminders. 
+
+This project was developed as a submission for the Binary Automates Software Engineering Internship take-home assignment.
+
+## Features
+
+- **Invoice Management:** Create, store, and view detailed invoices. Supports multiple templates and tracks line items, taxes, and discounts.
+- **Payment Reminders:** Send payment reminders via email with attached PDF versions of the invoice.
+- **Status Tracking:** Update invoice statuses (e.g., Draft, Sent, Paid, Overdue) with state transition logic and audit logging.
+- **Search & Filtering:** Client-side text search and status filtering for quick record retrieval.
+- **Financial Dashboard:** High-level overview featuring total invoices, paid vs. unpaid metrics, recent sales, and revenue charts.
+- **AI Analytics:** Integrated assistant to analyze sales data and provide business insights.
+- **Responsive UI:** Interface optimized for desktop, tablet, and mobile devices.
+
+## Tech Stack
+
+- **Framework:** Next.js 15+ (App Router, Server Actions)
+- **Frontend:** React 19, Tailwind CSS v4, shadcn/ui
+- **Database:** PostgreSQL (Neon Serverless)
+- **ORM:** Drizzle ORM
+- **Authentication:** Custom JWT session management using `jose` and `bcryptjs`
+- **Emails:** Resend & React Email
+- **Document Generation:** `jspdf` and `html-to-image`
+- **AI Integration:** Google GenAI SDK
+
+## Assignment Requirements Fulfillment
+
+| Requirement | Implementation Details |
+| :--- | :--- |
+| **1. Invoices** | Implemented CRUD operations via database-backed Next.js Server Actions. Includes fields for invoice number, amounts, due dates, and customer details. |
+| **2. Reminders** | Implemented UI to send reminders, update statuses manually, and track all actions in an `invoice_activities` audit log table. |
+| **3. Real Email** | Integrated Resend API to send HTML emails to customers with PDF attachments. |
+| **4. Search / Filtering** | Implemented client-side filtering by customer name, description, and invoice status. |
+| **5. Summary / Dashboard**| Created a `/dashboard` route tracking total invoices, unpaid, overdue, and paid amounts with data visualization. |
+| **6. Responsive UI** | Built with Tailwind CSS to ensure responsiveness across various screen sizes. |
+| **Additional Features** | Added PDF Generation, AI Sales Analytics, and stateless edge-ready authentication. |
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- Node.js (v20+)
+- PostgreSQL database URL
+- Resend API Key (for emails)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Installation
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   cd invoiceflow
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. **Set up environment variables:**
+   Create a `.env.local` file in the root directory based on the `.env.example`:
+   ```env
+   DATABASE_URL="postgresql://user:password@host/dbname"
+   JWT_SECRET="your-super-secret-jwt-key"
+   RESEND_API_KEY="re_your_resend_api_key"
+   EMAIL_FROM="InvoiceFlow <noreply@yourdomain.com>"
+   GEMINI_API_KEY="your_google_genai_key" # Optional for AI features
+   ```
 
-## Learn More
+4. **Initialize the database:**
+   Push the schema to your database using Drizzle:
+   ```bash
+   npm run db:push
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+5. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+6. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
 
-## Deploy on Vercel
+- `src/app`: Next.js App Router pages.
+- `src/server/actions`: Server Actions for data mutations.
+- `src/server/queries`: Secure data fetching logic.
+- `src/db/schema`: Drizzle ORM database schemas.
+- `src/components`: Reusable UI components, email templates, and charts.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Architecture & Engineering Decisions
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Server Actions over API Routes:** Utilized Next.js Server Actions for client-to-server RPC communication, reducing boilerplate and improving type safety.
+- **Stateless Authentication:** Implemented custom JWT session management using `jose` for secure, fast authentication at the edge without the overhead of external auth providers or heavy session databases.
+- **Database Choice:** Chose PostgreSQL via Neon Serverless and Drizzle ORM for strong relational data integrity, ease of schema management, and fast querying.
