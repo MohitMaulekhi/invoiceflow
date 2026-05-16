@@ -6,7 +6,11 @@ import { customerSchema } from "@/lib/validations/invoice";
 import { requireAuth } from "@/lib/auth/session";
 import { revalidatePath } from "next/cache";
 
-export async function createCustomerAction(prevState: any, formData: FormData) {
+function isUniqueViolationError(error: unknown): error is { code: string } {
+  return typeof error === "object" && error !== null && "code" in error && typeof error.code === "string";
+}
+
+export async function createCustomerAction(formData: FormData) {
   const session = await requireAuth();
   const data = Object.fromEntries(formData.entries());
   
@@ -29,8 +33,8 @@ export async function createCustomerAction(prevState: any, formData: FormData) {
       zip: parsed.data.zip || null,
       country: parsed.data.country || null,
     });
-  } catch (error: any) {
-    if (error.code === '23505') { // unique violation
+  } catch (error: unknown) {
+    if (isUniqueViolationError(error) && error.code === "23505") {
       return { error: "A customer with this email already exists." };
     }
     return { error: "Failed to create customer." };

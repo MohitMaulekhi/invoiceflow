@@ -1,6 +1,7 @@
 import React from "react";
 import { format } from "date-fns";
-import { InvoiceTemplateProps, formatMoney } from "./types";
+import type { InvoiceTemplateProps } from "@/types/invoice";
+import { formatMoney } from "./types";
 
 export function ClassicInvoice({ invoice, customer, lineItems, business }: InvoiceTemplateProps) {
   return (

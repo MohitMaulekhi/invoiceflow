@@ -10,7 +10,7 @@ export async function analyzeSalesAction() {
   const session = await requireAuth();
 
   if (!process.env.GEMINI_API_KEY) {
-    return { error: "Gemini API key is missing. Please add GEMINI_API_KEY to your .env.local file." };
+    return { error: "Unable to analyze sales data, Please try again later." };
   }
 
   try {

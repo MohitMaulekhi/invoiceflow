@@ -22,17 +22,15 @@ import {
   ModernInvoice, 
   ClassicInvoice, 
   BoldInvoice, 
-  ElegantInvoice,
-  InvoiceData,
-  CustomerData,
-  LineItemData
+  ElegantInvoice
 } from "@/components/invoices/templates";
 import { markAsPaidAction } from "@/server/actions/invoices/mark-paid";
 import { sendReminderAction } from "@/server/actions/reminders/send-reminder";
 import { deleteInvoiceAction } from "@/server/actions/invoices/delete-invoice";
 import Link from "next/link";
-import { ALLOWED_STATUS_TRANSITIONS, InvoiceStatus } from "@/lib/invoice-states";
+import { ALLOWED_STATUS_TRANSITIONS } from "@/lib/invoice-states";
 import { updateInvoiceStatusAction } from "@/server/actions/invoices/update-invoice-status";
+import type { CustomerData, InvoiceData, InvoiceStatus, LineItemData } from "@/types/invoice";
 
 interface InvoiceViewerProps {
   invoice: InvoiceData & { id: string; status: string; templateId: string };

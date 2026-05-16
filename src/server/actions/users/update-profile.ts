@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 import { requireAuth } from "@/lib/auth/session";
 import { revalidatePath } from "next/cache";
 
-export async function updateProfileAction(prevState: any, formData: FormData) {
+export async function updateProfileAction(formData: FormData) {
   const session = await requireAuth();
   const name = formData.get("name") as string;
   const businessName = formData.get("businessName") as string;
@@ -29,8 +29,7 @@ export async function updateProfileAction(prevState: any, formData: FormData) {
     revalidatePath("/invoices");
     revalidatePath("/dashboard");
     return { success: "Profile updated successfully." };
-  } catch (error) {
-    console.error("Update profile error:", error);
+  } catch{
     return { error: "Failed to update profile." };
   }
 }

@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET || "super-secret-jwt-key-for-dev");
-const protectedRoutes = ["/dashboard", "/invoices", "/customers"];
+const protectedRoutes = ["/dashboard", "/invoices", "/customers","/settings"];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

@@ -5,21 +5,19 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createInvoiceAction } from "@/server/actions/invoices/create-invoice";
 import { updateInvoiceAction } from "@/server/actions/invoices/update-invoice";
-import { invoiceSchema, InvoiceInput } from "@/lib/validations/invoice";
+import { invoiceSchema } from "@/lib/validations/invoice";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Trash2, Loader2 } from "lucide-react";
+import type { CustomerData, InvoiceData, InvoiceInput, LineItemData } from "@/types/invoice";
 import { 
   MinimalInvoice, 
   ModernInvoice, 
   ClassicInvoice, 
   BoldInvoice, 
-  ElegantInvoice,
-  InvoiceData,
-  LineItemData,
-  CustomerData
+  ElegantInvoice
 } from "@/components/invoices/templates";
 
 // Removed dummyBusiness

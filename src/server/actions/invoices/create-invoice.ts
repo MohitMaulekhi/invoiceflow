@@ -4,10 +4,11 @@ import { db } from "@/db";
 import { invoices } from "@/db/schema/invoices";
 import { invoiceLineItems } from "@/db/schema/invoice_line_items";
 import { invoiceActivities } from "@/db/schema/invoice_activities";
-import { invoiceSchema, InvoiceInput } from "@/lib/validations/invoice";
+import { invoiceSchema } from "@/lib/validations/invoice";
 import { requireAuth } from "@/lib/auth/session";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import type { InvoiceInput } from "@/types/invoice";
 
 export async function createInvoiceAction(data: InvoiceInput) {
   const session = await requireAuth();

@@ -4,11 +4,12 @@ import { db } from "@/db";
 import { users } from "@/db/schema/users";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
-import { signInSchema, SignInInput } from "@/lib/validations/auth";
+import { signInSchema } from "@/lib/validations/auth";
 import { createSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
 
-export async function signInAction(prevState: any, formData: FormData) {
+
+export async function signInAction(formData: FormData) {
   const data = Object.fromEntries(formData.entries());
   const parsed = signInSchema.safeParse(data);
   

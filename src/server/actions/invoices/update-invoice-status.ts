@@ -6,7 +6,8 @@ import { invoiceActivities } from "@/db/schema/invoice_activities";
 import { requireAuth } from "@/lib/auth/session";
 import { revalidatePath } from "next/cache";
 import { eq, and } from "drizzle-orm";
-import { canTransitionTo, InvoiceStatus } from "@/lib/invoice-states";
+import { canTransitionTo } from "@/lib/invoice-states";
+import type { InvoiceStatus } from "@/types/invoice";
 
 export async function updateInvoiceStatusAction(invoiceId: string, status: InvoiceStatus) {
   const session = await requireAuth();

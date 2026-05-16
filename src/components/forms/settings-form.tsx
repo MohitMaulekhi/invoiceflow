@@ -1,15 +1,18 @@
 "use client";
 
-import { useActionState, useTransition } from "react";
+import { useState, useTransition } from "react";
+import type { FormEvent } from "react";
 import { updateProfileAction } from "@/server/actions/users/update-profile";
 import { signOutAction } from "@/server/actions/auth/sign-out";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2, LogOut } from "lucide-react";
+import type { UserProfile } from "@/server/queries/users";
 
-export function SettingsForm({ user }: { user: any }) {
-  const [state, formAction, isPending] = useActionState(updateProfileAction, null);
+export function SettingsForm({ user }: { user: UserProfile }) {
+  const [state, setState] = useState<{ error?: string; success?: string } | null>(null);
+  const [isPending, startSaveTransition] = useTransition();
   const [isSignOutPending, startSignOut] = useTransition();
 
   const handleLogout = () => {
@@ -18,12 +21,24 @@ export function SettingsForm({ user }: { user: any }) {
     });
   };
 
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setState(null);
+
+    const formData = new FormData(event.currentTarget);
+
+    startSaveTransition(async () => {
+      const result = await updateProfileAction(formData);
+      setState(result ?? null);
+    });
+  };
+
   const userInitials = user.name ? user.name.charAt(0).toUpperCase() : "U";
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 items-start">
       {/* Business Details Card (Left Side on Desktop) */}
-      <form action={formAction} className="flex-1 w-full order-2 lg:order-1">
+      <form onSubmit={handleSubmit} className="flex-1 w-full order-2 lg:order-1">
         <Card className="shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 rounded-[24px] bg-white overflow-hidden">
           <CardHeader className="p-8 border-b border-slate-100">
             <CardTitle className="text-xl text-slate-900 font-semibold tracking-tight">Business Details</CardTitle>

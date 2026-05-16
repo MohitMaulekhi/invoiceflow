@@ -2,7 +2,7 @@ import { db } from "@/db";
 import { invoices } from "@/db/schema/invoices";
 import { customers } from "@/db/schema/customers";
 import { invoiceLineItems } from "@/db/schema/invoice_line_items";
-import { eq, desc, and, gte, sql } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { subDays, startOfDay } from "date-fns";
 
 export async function getDashboardData(userId: string) {
@@ -91,7 +91,7 @@ export async function getDashboardData(userId: string) {
   // We'll get all line items for this user's invoices
   const userInvoicesIds = allInvoices.map(i => i.id);
   
-  let topItems: any[] = [];
+  let topItems: Array<{ name: string; totalCents: number }> = [];
   if (userInvoicesIds.length > 0) {
     const allItems = await db
       .select({
@@ -99,8 +99,6 @@ export async function getDashboardData(userId: string) {
         totalCents: invoiceLineItems.totalCents,
       })
       .from(invoiceLineItems)
-      // This is a simplified approach; ideally we use an IN clause or JOIN, but Drizzle IN is clunky with large arrays.
-      // Better approach with JOIN:
       .innerJoin(invoices, eq(invoices.id, invoiceLineItems.invoiceId))
       .where(eq(invoices.userId, userId));
       

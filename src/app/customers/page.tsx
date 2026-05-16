@@ -1,13 +1,12 @@
 import { getCustomers } from "@/server/queries/customers";
 import { requireAuth } from "@/lib/auth/session";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { CustomerGrid } from "@/components/customers/customer-grid";
+import type { AppCustomer } from "@/types/customer";
 
 export default async function CustomersPage() {
   const session = await requireAuth();
   
-  let customerList: any[] = [];
+  let customerList: AppCustomer[] = [];
   try {
     customerList = await getCustomers(session.userId);
   } catch (e) {
@@ -15,7 +14,7 @@ export default async function CustomersPage() {
   }
 
   return (
-    <div className="max-w-[1600px] mx-auto space-y-8">
+    <div className="max-w-400 mx-auto space-y-8">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900">Customers</h1>

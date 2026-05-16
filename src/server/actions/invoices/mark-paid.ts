@@ -25,8 +25,7 @@ export async function markAsPaidAction(invoiceId: string) {
     revalidatePath(`/invoices/${invoiceId}`);
     revalidatePath("/invoices");
     revalidatePath("/dashboard");
-  } catch (error) {
-    console.error(error);
+  } catch{
     throw new Error("Failed to mark invoice as paid");
   }
 }

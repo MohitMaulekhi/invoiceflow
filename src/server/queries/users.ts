@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { users } from "@/db/schema/users";
 import { eq } from "drizzle-orm";
 
+
 export async function getUserProfile(userId: string) {
   const userQuery = await db
     .select({

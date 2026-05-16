@@ -7,7 +7,11 @@ import { requireAuth } from "@/lib/auth/session";
 import { revalidatePath } from "next/cache";
 import { eq, and } from "drizzle-orm";
 
-export async function updateCustomerAction(prevState: any, formData: FormData) {
+function isUniqueViolationError(error: unknown): error is { code: string } {
+  return typeof error === "object" && error !== null && "code" in error && typeof error.code === "string";
+}
+
+export async function updateCustomerAction(formData: FormData) {
   const session = await requireAuth();
   const data = Object.fromEntries(formData.entries());
   
@@ -35,8 +39,8 @@ export async function updateCustomerAction(prevState: any, formData: FormData) {
     
     revalidatePath("/customers");
     return { success: true };
-  } catch (error: any) {
-    if (error.code === '23505') { // unique violation
+  } catch (error: unknown) {
+    if (isUniqueViolationError(error) && error.code === "23505") {
       return { error: "A customer with this email already exists." };
     }
     return { error: "Failed to update customer." };

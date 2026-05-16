@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useTransition, useActionState, useMemo, useEffect } from "react";
+import { useMemo, useState, useTransition } from "react";
+import type { FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { updateCustomerAction } from "@/server/actions/invoices/update-customer";
-import { deleteCustomerAction } from "@/server/actions/invoices/delete-customer";
-import { createCustomerAction } from "@/server/actions/invoices/create-customer";
+import { updateCustomerAction } from "@/server/actions/customers/update-customer";
+import { deleteCustomerAction } from "@/server/actions/customers/delete-customer";
+import { createCustomerAction } from "@/server/actions/customers/create-customer";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -17,81 +18,130 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Search, MoreVertical, Edit2, Trash2, Building2, Mail, Phone, Loader2 } from "lucide-react";
+import type { AppCustomer, CustomerSortOption } from "@/types/customer";
 
-export function CustomerGrid({ initialCustomers }: { initialCustomers: any[] }) {
+type CustomerGridProps = {
+  initialCustomers: AppCustomer[];
+};
+
+export function CustomerGrid({ initialCustomers }: CustomerGridProps) {
   const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("newest");
-  const [editingCustomer, setEditingCustomer] = useState<any | null>(null);
+  const [sort, setSort] = useState<CustomerSortOption>("newest");
+  const [editingCustomer, setEditingCustomer] = useState<AppCustomer | null>(null);
   const [isCreating, setIsCreating] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [updateError, setUpdateError] = useState<string | null>(null);
+  const [createError, setCreateError] = useState<string | null>(null);
+  const [, startDeleteTransition] = useTransition();
+  const [isUpdatePending, startUpdateTransition] = useTransition();
+  const [isCreatePending, startCreateTransition] = useTransition();
 
-  // Sort & Filter
   const filteredAndSorted = useMemo(() => {
-    let result = initialCustomers.filter(c => {
-      const s = search.toLowerCase();
-      return c.name.toLowerCase().includes(s) || 
-             (c.companyName && c.companyName.toLowerCase().includes(s)) ||
-             (c.email && c.email.toLowerCase().includes(s));
+    const normalizedSearch = search.toLowerCase();
+    const result = initialCustomers.filter((customer) => {
+      return (
+        customer.name.toLowerCase().includes(normalizedSearch) ||
+        customer.companyName?.toLowerCase().includes(normalizedSearch) ||
+        customer.email?.toLowerCase().includes(normalizedSearch)
+      );
     });
 
-    if (sort === "newest") {
-      result = result.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    } else if (sort === "oldest") {
-      result = result.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-    } else if (sort === "az") {
-      result = result.sort((a, b) => a.name.localeCompare(b.name));
-    }
+    result.sort((a, b) => {
+      if (sort === "oldest") {
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      }
+
+      if (sort === "az") {
+        return a.name.localeCompare(b.name);
+      }
+
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
 
     return result;
   }, [initialCustomers, search, sort]);
 
-  // Edit Action State
-  const [updateState, updateFormAction, isUpdatePending] = useActionState(updateCustomerAction, null);
-
-  // Create Action State
-  const [createState, createFormAction, isCreatePending] = useActionState(createCustomerAction, null);
-
-  // Auto-close dialog on success (checking if updateState.success is true and not pending)
-  useEffect(() => {
-    if (updateState?.success && !isUpdatePending) {
-      setEditingCustomer(null);
-    }
-  }, [updateState, isUpdatePending]);
-
-  useEffect(() => {
-    if (createState?.success && !isCreatePending) {
-      setIsCreating(false);
-    }
-  }, [createState, isCreatePending]);
-
   const handleDelete = (id: string) => {
     if (confirm("Are you sure you want to delete this customer? This action cannot be undone.")) {
-      startTransition(async () => {
+      startDeleteTransition(async () => {
         await deleteCustomerAction(id);
       });
     }
   };
 
+  const handleSortChange = (value: CustomerSortOption | null) => {
+    setSort(value ?? "newest");
+  };
+
+  const handleEditClose = (open: boolean) => {
+    if (!open) {
+      setEditingCustomer(null);
+      setUpdateError(null);
+    }
+  };
+
+  const handleCreateClose = (open: boolean) => {
+    setIsCreating(open);
+    if (!open) {
+      setCreateError(null);
+    }
+  };
+
+  const handleUpdateSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setUpdateError(null);
+
+    const formData = new FormData(event.currentTarget);
+
+    startUpdateTransition(async () => {
+      const result = await updateCustomerAction(formData);
+
+      if (result?.error) {
+        setUpdateError(result.error);
+        return;
+      }
+
+      setEditingCustomer(null);
+    });
+  };
+
+  const handleCreateSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setCreateError(null);
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    startCreateTransition(async () => {
+      const result = await createCustomerAction(formData);
+
+      if (result?.error) {
+        setCreateError(result.error);
+        return;
+      }
+
+      form.reset();
+      setIsCreating(false);
+    });
+  };
+
   return (
     <div className="space-y-8">
-      {/* Control Bar */}
       <div className="flex flex-col sm:flex-row gap-4 items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
         <div className="relative flex-1 w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-          <Input 
+          <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search customers..." 
+            placeholder="Search customers..."
             className="pl-10 bg-slate-50 border-transparent focus:border-primary focus:bg-white rounded-xl h-12 text-base"
           />
         </div>
         <div className="flex gap-4 w-full sm:w-auto">
-          <Select value={sort} onValueChange={(val) => setSort(val || "newest")}>
+          <Select value={sort} onValueChange={handleSortChange}>
             <SelectTrigger className="w-full sm:w-[180px] h-12 rounded-xl bg-slate-50 border-transparent focus:border-primary focus:bg-white">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
@@ -102,15 +152,14 @@ export function CustomerGrid({ initialCustomers }: { initialCustomers: any[] }) 
             </SelectContent>
           </Select>
 
-          <Button 
+          <Button
             onClick={() => setIsCreating(true)}
             className="rounded-xl font-bold shadow-md shadow-primary/20 hover:scale-[1.02] transition-transform px-6 h-12 hidden sm:flex"
           >
             Add Customer
           </Button>
         </div>
-        {/* Mobile add button */}
-        <Button 
+        <Button
           onClick={() => setIsCreating(true)}
           className="rounded-xl font-bold shadow-md shadow-primary/20 hover:scale-[1.02] transition-transform px-6 h-12 w-full sm:hidden"
         >
@@ -118,11 +167,10 @@ export function CustomerGrid({ initialCustomers }: { initialCustomers: any[] }) 
         </Button>
       </div>
 
-      {/* Grid */}
       <motion.div layout className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         <AnimatePresence>
-          {filteredAndSorted.map(customer => (
-            <motion.div 
+          {filteredAndSorted.map((customer) => (
+            <motion.div
               key={customer.id}
               layout
               initial={{ opacity: 0, scale: 0.9 }}
@@ -133,16 +181,21 @@ export function CustomerGrid({ initialCustomers }: { initialCustomers: any[] }) 
             >
               <div className="absolute top-4 right-4">
                 <DropdownMenu>
-                  <DropdownMenuTrigger render={
-                    <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-slate-900">
-                      <MoreVertical className="w-4 h-4" />
-                    </Button>
-                  } />
+                  <DropdownMenuTrigger
+                    render={
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-slate-900">
+                        <MoreVertical className="w-4 h-4" />
+                      </Button>
+                    }
+                  />
                   <DropdownMenuContent align="end" className="w-40 rounded-xl">
                     <DropdownMenuItem onClick={() => setEditingCustomer(customer)} className="cursor-pointer">
                       <Edit2 className="w-4 h-4 mr-2" /> Edit
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleDelete(customer.id)} className="cursor-pointer text-rose-600 focus:text-rose-700 focus:bg-rose-50">
+                    <DropdownMenuItem
+                      onClick={() => handleDelete(customer.id)}
+                      className="cursor-pointer text-rose-600 focus:text-rose-700 focus:bg-rose-50"
+                    >
                       <Trash2 className="w-4 h-4 mr-2" /> Delete
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -197,18 +250,15 @@ export function CustomerGrid({ initialCustomers }: { initialCustomers: any[] }) 
         </div>
       )}
 
-      {/* Edit Dialog */}
-      <Dialog open={!!editingCustomer} onOpenChange={(open) => !open && setEditingCustomer(null)}>
+      <Dialog open={!!editingCustomer} onOpenChange={handleEditClose}>
         <DialogContent className="sm:max-w-[600px] rounded-[24px] p-0 overflow-hidden bg-white border-none shadow-2xl">
           <div className="p-6 border-b border-slate-100 bg-slate-50">
             <DialogTitle className="text-xl font-bold text-slate-900">Edit Customer</DialogTitle>
-            <DialogDescription>
-              Update customer details and billing information.
-            </DialogDescription>
+            <DialogDescription>Update customer details and billing information.</DialogDescription>
           </div>
-          
+
           {editingCustomer && (
-            <form action={updateFormAction}>
+            <form onSubmit={handleUpdateSubmit}>
               <input type="hidden" name="id" value={editingCustomer.id} />
               <div className="p-6 space-y-6 max-h-[60vh] overflow-y-auto">
                 <div className="space-y-4">
@@ -263,8 +313,8 @@ export function CustomerGrid({ initialCustomers }: { initialCustomers: any[] }) 
                   </div>
                 </div>
 
-                {updateState?.error && (
-                  <p className="text-sm text-red-600 font-medium bg-red-50 p-3 rounded-xl border border-red-100">{updateState.error}</p>
+                {updateError && (
+                  <p className="text-sm text-red-600 font-medium bg-red-50 p-3 rounded-xl border border-red-100">{updateError}</p>
                 )}
               </div>
 
@@ -281,17 +331,15 @@ export function CustomerGrid({ initialCustomers }: { initialCustomers: any[] }) 
           )}
         </DialogContent>
       </Dialog>
-      {/* Create Dialog */}
-      <Dialog open={isCreating} onOpenChange={setIsCreating}>
+
+      <Dialog open={isCreating} onOpenChange={handleCreateClose}>
         <DialogContent className="sm:max-w-[600px] rounded-[24px] p-0 overflow-hidden bg-white border-none shadow-2xl">
           <div className="p-6 border-b border-slate-100 bg-slate-50">
             <DialogTitle className="text-xl font-bold text-slate-900">Add Customer</DialogTitle>
-            <DialogDescription>
-              Add a new customer to your database.
-            </DialogDescription>
+            <DialogDescription>Add a new customer to your database.</DialogDescription>
           </div>
-          
-          <form action={createFormAction}>
+
+          <form onSubmit={handleCreateSubmit}>
             <div className="p-6 space-y-6 max-h-[60vh] overflow-y-auto">
               <div className="space-y-4">
                 <h3 className="text-xs font-bold text-primary uppercase tracking-widest">Basic Info</h3>
@@ -345,8 +393,8 @@ export function CustomerGrid({ initialCustomers }: { initialCustomers: any[] }) 
                 </div>
               </div>
 
-              {createState?.error && (
-                <p className="text-sm text-red-600 font-medium bg-red-50 p-3 rounded-xl border border-red-100">{createState.error}</p>
+              {createError && (
+                <p className="text-sm text-red-600 font-medium bg-red-50 p-3 rounded-xl border border-red-100">{createError}</p>
               )}
             </div>
 

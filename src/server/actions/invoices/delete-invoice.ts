@@ -19,8 +19,7 @@ export async function deleteInvoiceAction(invoiceId: string) {
     revalidatePath("/invoices");
     revalidatePath("/dashboard");
     return { success: true };
-  } catch (error) {
-    console.error("Delete invoice error:", error);
+  } catch{
     throw new Error("Failed to delete invoice.");
   }
 }

@@ -1,4 +1,4 @@
-export type InvoiceStatus = "draft" | "sent" | "viewed" | "partially_paid" | "paid" | "overdue" | "voided";
+import type { InvoiceStatus } from "@/types/invoice";
 
 export const ALLOWED_STATUS_TRANSITIONS: Record<InvoiceStatus, InvoiceStatus[]> = {
   draft: ["sent", "paid", "voided"],

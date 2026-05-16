@@ -1,11 +1,10 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import type { SessionPayload } from "@/types/auth";
 import "server-only";
 
 const secretKey = new TextEncoder().encode(process.env.JWT_SECRET || "super-secret-key");
-
-export type SessionPayload = { userId: string; email: string; [key: string]: any };
 
 export async function createSession(payload: SessionPayload) {
   const token = await new SignJWT(payload)
@@ -35,8 +34,8 @@ export async function getSession(): Promise<SessionPayload | null> {
   if (!token) return null;
   
   try {
-    const { payload } = await jwtVerify(token, secretKey);
-    return payload as SessionPayload;
+    const { payload } = await jwtVerify<SessionPayload>(token, secretKey);
+    return payload;
   } catch {
     return null;
   }

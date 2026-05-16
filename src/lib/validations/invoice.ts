@@ -30,5 +30,3 @@ export const customerSchema = z.object({
   zip: z.string().optional().or(z.literal("")),
   country: z.string().optional().or(z.literal("")),
 });
-
-export type InvoiceInput = z.infer<typeof invoiceSchema>;

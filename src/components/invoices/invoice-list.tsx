@@ -23,7 +23,8 @@ import { formatMoney } from "@/components/invoices/templates/types";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { ALLOWED_STATUS_TRANSITIONS, InvoiceStatus } from "@/lib/invoice-states";
+import { ALLOWED_STATUS_TRANSITIONS } from "@/lib/invoice-states";
+import type { InvoiceStatus } from "@/types/invoice";
 
 export function InvoiceList({ initialInvoices }: { initialInvoices: any[] }) {
   const [search, setSearch] = useState("");

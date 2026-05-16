@@ -1,4 +1,3 @@
-export * from "./types";
 export * from "./MinimalInvoice";
 export * from "./ModernInvoice";
 export * from "./ClassicInvoice";
